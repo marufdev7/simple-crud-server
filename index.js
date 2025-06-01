@@ -29,6 +29,8 @@ async function run() {
         const database = client.db("usersDB");
         const userCollection = database.collection("users");
 
+        // const userCollection = client.db("usersDB").collection("users");
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             console.log('user', user);
