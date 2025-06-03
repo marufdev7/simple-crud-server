@@ -35,7 +35,7 @@ async function run() {
             const cursor = userCollection.find();
             const result = await cursor.toArray();
             res.send(result);
-        })
+        });
 
         app.get('/users/:id', async (req, res) => {
             const id = req.params.id;
@@ -51,13 +51,29 @@ async function run() {
             res.send(result);
         });
 
-        app.delete('/users/:id', async(req, res) => {
+        app.put('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+            // console.log(id , user);
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateUser = {
+                $set: {
+                    name: user.name,
+                    email: user.email,
+                }
+            }
+            const result = await userCollection.updateOne(filter, updateUser, options);
+            res.send(result);
+        });
+
+        app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;
             console.log('please delete this id', id);
             const query = { _id: new ObjectId(id) };
             const result = await userCollection.deleteOne(query);
             res.send(result);
-        })
+        });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
